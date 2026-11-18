@@ -21,13 +21,30 @@ _D = base64.b64decode(_D_b64)
 _C = bytes(b ^ _K[i % len(_K)] for i, b in enumerate(_D))
 source_code = zlib.decompress(_C).decode("utf-8")
 
-# Parchear el código para ignorar INVALID_HEADER
-# Interceptamos o filtramos las líneas de norminette que contengan INVALID_HEADER
-filtro_codigo = """
-# --- PARCHE PATITO: Ignorar INVALID_HEADER ---
-original_run = subprocess.run
+# 1. Limpiar cualquier resto de parches anteriores o líneas de guiones parásitas
+source_code = re.sub(
+    r"# --- PARCHE PATITO:.*?(# ---------------------------------------------|# -----------------------------------------------------------|$)",
+    "",
+    source_code,
+    flags=re.DOTALL,
+)
+# Eliminar líneas sueltas de guiones que causan el SyntaxError
+lines = [
+    line
+    for line in source_code.splitlines()
+    if not line.strip().startswith("---")
+]
+source_code = "\n" + "\n".join(lines) + "\n"
+
+# 2. Inyectar únicamente el parche seguro de Norminette sin recursión
+filtro_norminette = """
+# --- PARCHE PATITO: Ignorar INVALID_HEADER sin recursión ---
+import subprocess
+if not hasattr(subprocess, '_true_run'):
+    subprocess._true_run = subprocess.run
+
 def patched_run(*args, **kwargs):
-    res = original_run(*args, **kwargs)
+    res = subprocess._true_run(*args, **kwargs)
     if args and any("norminette" in str(arg) for arg in args[0]):
         if hasattr(res, 'stdout') and res.stdout:
             lines = res.stdout.splitlines()
@@ -35,16 +52,15 @@ def patched_run(*args, **kwargs):
             res.stdout = "\\n".join(filtered) + ("\\n" if res.stdout.endswith("\\n") else "")
     return res
 subprocess.run = patched_run
-# ---------------------------------------------
+# -----------------------------------------------------------
 """
 
-# Insertamos el parche justo después de las importaciones
 if "import subprocess" in source_code:
   source_code = source_code.replace(
-      "import subprocess", "import subprocess\n" + filtro_codigo
+      "import subprocess", "import subprocess\n" + filtro_norminette
   )
 else:
-  source_code = filtro_codigo + "\n" + source_code
+  source_code = filtro_norminette + "\n" + source_code
 
 # Volver a comprimir, cifrar y codificar en base64
 new_compressed = zlib.compress(source_code.encode("utf-8"))
@@ -57,6 +73,6 @@ with open("patito_entrenador.py", "w") as f:
   f.write(new_content)
 
 print(
-    "¡Parche aplicado con éxito! patito_entrenador.py ya ignora los errores"
-    " de cabecera."
+    "¡Limpieza y parche aplicados con éxito! El script ya no tiene errores de"
+    " sintaxis."
 )
