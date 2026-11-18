@@ -1,0 +1,15 @@
+# Archivos temporales y de sesion
+rendu/
+rendu_backup/
+subject/
+.repaso.dat
+.patito.lock
+progreso.json
+__pycache__/
+*.pyc
+.tmp_exec/
+*.tar.gz
+
+# Opcional: descomenta la linea siguiente si NO quieres subir el generador fuente
+# generar_banco.py
+generar_banco.py
