@@ -7,3 +7,4 @@ Diseñado para cualquier persona que quiera reforzar sus bases en C, probar su n
 Inspirado por la piscina octubre 2026. Vuestras lagrimas no fueron en vano, a partir de ahora existe una guia mas completa para practicar. 
 Los ejercicios son aleatorios, creados por el algoritmo.
 Entrenador CLI 100% offline para practicar C desde cero.
+Gracias por usar esta herramienta. Att: patito.
