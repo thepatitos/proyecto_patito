@@ -1,28 +1,24 @@
-NAME = libft.a
+PYTHON = python3
+SCRIPT = patito_entrenador.py
+PATCHER = parchear.py
 
-SRC = ft_putchar.c ft_str_is_lowercase.c
-OBJ = $(SRC:.c=.o)
-
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-
-all: patch $(NAME)
+all: patch
+	@echo "========================================="
+	@echo "  Proyecto Patito - Entrenador listo"
+	@echo "  Puedes hacer: make run"
+	@echo "========================================="
 
 patch:
-	@python3 patito_entrenador.py --patch
+	@$(PYTHON) $(PATCHER)
 
-$(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+run: patch
+	@$(PYTHON) $(SCRIPT)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+install:
+	@chmod +x install_header.sh
+	@./install_header.sh
 
 clean:
-	rm -f $(OBJ)
+	@rm -rf __pycache__ *.pyc
 
-fclean: clean
-	rm -f $(NAME)
-
-re: fclean all
-
-.PHONY: all patch clean fclean re
+.PHONY: all patch run install clean
