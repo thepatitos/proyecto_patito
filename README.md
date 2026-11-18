@@ -1,4 +1,7 @@
 # Patito-entrenador (Offline version)
+Pasos:
+-Clonar repo, abrir terminal en la carpeta clonada, usar: make.
+
 Inspirado en Maestro42, rediseñado con ia para ayudar estudiantes con problemas de estudio y organización en sus prácticas.
 Hecho para demostrar que la ia es nuestro aliado, y no nuestro comodín para autoengañarnos copiando ejercicios resueltos.
 El aprendizaje significativo se obtiene a tráves del pensamiento crítico, la disciplina, y la práctica.
